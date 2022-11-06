@@ -1,10 +1,14 @@
 {
-    "compilerOptions": {
-       "baseUrl": "./packages",
-       "paths": {
-          "client/*": ["client/src/*"],
-         //  "@namespace/utils/*": ["utils/src/*"],
+   "compilerOptions": {
+      "baseUrl": "./packages",
+      "paths": {
+         "@vault/client/*": [
+            "client/src/*"
+         ],
+         "@vault/server/*": [
+            "server/src/*"
+         ],
          //  "@namespace/web/*": ["web/src/*"]
-       }
-     }
-  }
+      }
+   }
+}
