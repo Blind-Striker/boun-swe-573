@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "packages": ["packages/*"],
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "npmClientArgs": ["--no-lockfile"],
+  "version": "independent",
+  "command": {
+    "version": {
+      "ignoreChanges": ["*.md"]
+    }
+  }
+}
