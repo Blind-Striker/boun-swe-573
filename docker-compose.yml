@@ -1,0 +1,14 @@
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: ./packages/server
+      target: development
+    volumes:
+      - ./packages/server:/usr/src/app
+      - /usr/src/app/node_modules # This ensures that the NestJS container manages the node_modules folder
+    # env_file:
+    #   - .env
+    command: yarn start:dev
+    ports:
+      - 3000:3000
