@@ -8,6 +8,9 @@
   "command": {
     "version": {
       "ignoreChanges": ["*.md"]
+    },
+    "publish": {
+      
     }
   }
 }

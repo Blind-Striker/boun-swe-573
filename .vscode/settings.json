@@ -3,5 +3,6 @@
         "packages/client",
         "packages/common",
         "packages/server"
-    ]
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

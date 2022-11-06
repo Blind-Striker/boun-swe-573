@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+       "baseUrl": "./packages",
+       "paths": {
+          "client/*": ["client/src/*"],
+         //  "@namespace/utils/*": ["utils/src/*"],
+         //  "@namespace/web/*": ["web/src/*"]
+       }
+     }
+  }
