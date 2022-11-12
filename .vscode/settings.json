@@ -4,5 +4,6 @@
         "packages/common",
         "packages/server"
     ],
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "files.eol": "\n",
 }
