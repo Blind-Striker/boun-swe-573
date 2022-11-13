@@ -1,14 +1,52 @@
 services:
   api:
     build:
-      dockerfile: Dockerfile
-      context: ./packages/server
+      dockerfile: ./packages/server/Dockerfile
+      context: .
       target: development
+    container_name: vault-api
     volumes:
-      - ./packages/server:/usr/src/app
-      - /usr/src/app/node_modules # This ensures that the NestJS container manages the node_modules folder
-    # env_file:
-    #   - .env
-    command: yarn start:dev
+      - .:/usr/src
+      # - /usr/src/node_modules # This ensures that the NestJS container manages the node_modules folder
+      # - /usr/src/packages/server/node_modules # This ensures that the NestJS container manages the node_modules folder
+      # # - /usr/src/app/node_modules # This ensures that the NestJS container manages the node_modules folder
+    env_file:
+      - ./packages/server/common/envs/.env
+    environment:
+      - IGNORE_ENV_FILE=1
+      - NODE_ENV=development
+      - MONGO_DB_CONN=mongodb://mongodb:27017/vault-db
+    command: yarn lerna run start:dev --scope '@vault/server'
     ports:
       - 3000:3000
+      - 9229:9229
+    networks:
+      - backend_net
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:4.4.17
+    container_name: vault-mongodb
+    ports:
+      - 27017:27017
+    env_file:
+      - ./packages/server/common/envs/.env
+    volumes:
+      # seeding scripts
+      - ./packages/server/scripts/mongo-init:/docker-entrypoint-initdb.d
+      # named volumes
+      - mongodb:/data/db
+      - mongoconfig:/data/configdb
+    networks:
+      - backend_net
+
+volumes:
+  # default dir on Ubuntu: /var/lib/docker/volumes
+  mongodb:
+  mongoconfig:
+
+
+networks:
+  backend_net:
+    driver: bridge
