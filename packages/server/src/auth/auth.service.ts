@@ -1,5 +1,11 @@
+import * as bcrypt from 'bcryptjs';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { LoginUserModel } from 'src/users/models/login-user.model';
+import { UserModel } from 'src/users/models/user.model';
+import { UserViewModel } from 'src/users/models/user.viewmodel';
 import { UserService } from '../users/users.service';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 
@@ -8,33 +14,36 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
-  async login(email: string, pass: string): Promise<any> {
+  async login(email: string, pass: string): Promise<UserViewModel> {
     const user = await this.userService.findOneByEmail(email);
-    if (user && user.password === pass) {
-      //delete user.passport;
-      return user;
+    if (user && (await bcrypt.compare(pass, user.password))) {
+      const userVm = this.mapper.map(user, UserModel, UserViewModel);
+      return userVm;
     }
-    return null;
+
+    throw new UnauthorizedException(
+      `There isn't any user with email: ${email}`,
+    );
   }
 
-  async verifyPayload(payload: JwtPayload): Promise<any> {
-    let user: { password: any };
+  async verifyPayload(payload: JwtPayload): Promise<UserViewModel> {
+    const user = await this.userService.findOneByEmail(payload.sub);
 
-    try {
-      user = await this.userService.findOneByEmail(payload.sub);
-    } catch (error) {
+    if (!user) {
       throw new UnauthorizedException(
         `There isn't any user with email: ${payload.sub}`,
       );
     }
-    delete user.password;
 
-    return user;
+    const userVm = this.mapper.map(user, UserModel, UserViewModel);
+
+    return userVm;
   }
 
-  async signToken(user: any) {
+  async signToken(user: LoginUserModel) {
     const payload = {
       sub: user.email,
     };
