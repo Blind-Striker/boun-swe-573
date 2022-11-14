@@ -29,6 +29,10 @@ export class User {
   password: string;
 
   @AutoMap()
+  @Prop()
+  refreshToken?: string;
+
+  @AutoMap()
   createdAt?: Date;
 
   @AutoMap()

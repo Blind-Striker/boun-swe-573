@@ -1,13 +1,12 @@
-import * as bcrypt from 'bcryptjs';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserModel } from 'src/users/models/user.model';
-import { RegisterUserModel } from './models/register-user.model';
+import { CreateUserModel } from './models/create-user.model';
 import { User, UserDocument } from './schemas/user.schema';
-import passport from 'passport';
+import { Injectable } from '@nestjs/common';
+import { UpdateUserModel } from './models/update-user.model';
 
 @Injectable()
 export class UserService {
@@ -16,32 +15,30 @@ export class UserService {
     @InjectModel(User.name) private userRepo: Model<UserDocument>,
   ) {}
 
-  public async register(
-    user: RegisterUserModel,
-  ): Promise<UserModel | undefined> {
-    let userEntity = await this.userRepo.findOne({ email: user.email }).exec();
+  public async create(createUserModel: CreateUserModel): Promise<UserModel> {
+    const userEntity = this.mapper.map(createUserModel, CreateUserModel, User);
+    userEntity.refreshToken = null;
 
-    if (userEntity) {
-      throw new ConflictException({ email: userEntity.email });
-    }
+    const userDoc = new this.userRepo(userEntity);
+    const savedUserEntity = await userDoc.save();
 
-    user.password = await this.hashPassword(user.password);
-    const userDoc = new this.userRepo(user);
-    userEntity = await userDoc.save();
-
-    return this.mapper.map(userEntity.toObject(), User, UserModel);
+    return this.mapper.map(savedUserEntity.toObject(), User, UserModel);
   }
 
-  public async findOneByEmail(email: string): Promise<UserModel | undefined> {
+  async update(
+    id: string,
+    updateUserModel: UpdateUserModel,
+  ): Promise<UserModel> {
+    const userEntity = await this.userRepo
+      .findByIdAndUpdate(id, updateUserModel, { new: true })
+      .exec();
+
+    return this.mapper.map(userEntity?.toObject(), User, UserModel);
+  }
+
+  public async findOneByEmail(email: string): Promise<UserModel> {
     const userEntity = await this.userRepo.findOne({ email: email }).exec();
 
     return this.mapper.map(userEntity, User, UserModel);
-  }
-
-  private async hashPassword(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt();
-    if (!/^\$2[abxy]?\$\d+\$/.test(password)) {
-      return bcrypt.hash(password, salt);
-    }
   }
 }

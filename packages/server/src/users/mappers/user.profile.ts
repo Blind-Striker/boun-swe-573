@@ -7,7 +7,7 @@ import {
 } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { RegisterUserModel } from '../models/register-user.model';
+import { CreateUserModel } from '../models/create-user.model';
 import { UserModel } from '../models/user.model';
 import { UserViewModel } from '../models/user.viewmodel';
 import { User } from '../schemas/user.schema';
@@ -20,7 +20,7 @@ export class UserProfile extends AutomapperProfile {
 
   override get profile(): MappingProfile {
     return (mapper) => {
-      createMap(mapper, RegisterUserModel, User);
+      createMap(mapper, CreateUserModel, User);
       createMap(
         mapper,
         User,
