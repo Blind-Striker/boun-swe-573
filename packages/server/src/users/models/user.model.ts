@@ -18,4 +18,7 @@ export class UserModel {
 
   @AutoMap()
   email: string;
+
+  @AutoMap()
+  refreshToken: string;
 }
