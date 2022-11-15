@@ -2,7 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserModel } from 'src/users/models/user.model';
+import { UserModel } from './models/user.model';
 import { CreateUserModel } from './models/create-user.model';
 import { User, UserDocument } from './schemas/user.schema';
 import { Injectable } from '@nestjs/common';

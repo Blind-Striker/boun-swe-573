@@ -9,8 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { CreateUserModel } from 'src/users/models/create-user.model';
-import { LoginUserModel } from 'src/users/models/login-user.model';
+import { CreateUserModel } from '../users/models/create-user.model';
+import { LoginUserModel } from '../users/models/login-user.model';
 
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';

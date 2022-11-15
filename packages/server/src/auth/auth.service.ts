@@ -9,14 +9,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { LoginUserModel } from 'src/users/models/login-user.model';
-import { UserModel } from 'src/users/models/user.model';
-import { UserViewModel } from 'src/users/models/user.viewmodel';
+import { LoginUserModel } from '../users/models/login-user.model';
+import { UserModel } from '../users/models/user.model';
+import { UserViewModel } from '../users/models/user.viewmodel';
 import { UserService } from '../users/users.service';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
-import { CreateUserModel } from 'src/users/models/create-user.model';
+import { CreateUserModel } from '../users/models/create-user.model';
 import { ConfigService } from '@nestjs/config';
-import { UpdateUserModel } from 'src/users/models/update-user.model';
 
 @Injectable()
 export class AuthService {
@@ -27,16 +26,16 @@ export class AuthService {
     @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
-  async signUp(registerUserModel: CreateUserModel): Promise<any> {
-    const user = await this.userService.findOneByEmail(registerUserModel.email);
+  async signUp(createUserModel: CreateUserModel): Promise<any> {
+    const user = await this.userService.findOneByEmail(createUserModel.email);
 
     if (user) {
       throw new ConflictException({ email: user.email }, 'User already exists');
     }
 
-    const hash = await this.hashData(registerUserModel.password);
+    const hash = await this.hashData(createUserModel.password);
     const newUser = await this.userService.create({
-      ...registerUserModel,
+      ...createUserModel,
       password: hash,
     });
     const tokens = await this.signTokens(newUser.email);
