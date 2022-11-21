@@ -7,10 +7,12 @@ import { UserService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { UserModel } from '../users/models/user.model';
+import { ConflictException } from '@nestjs/common';
 
 describe('AuthService', () => {
   let service: AuthService;
   let mockedUserService: DeepMocked<UserService>;
+  let mockedConfigService: DeepMocked<ConfigService>;
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -21,13 +23,14 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         JwtService,
-        ConfigService,
+        { provide: ConfigService, useValue: createMock<ConfigService>() },
         { provide: UserService, useValue: createMock<UserService>() },
       ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
     mockedUserService = module.get<DeepMocked<UserService>>(UserService);
+    mockedConfigService = module.get<DeepMocked<ConfigService>>(ConfigService);
   });
 
   it('should be defined', () => {
@@ -44,6 +47,8 @@ describe('AuthService', () => {
       password: 'changeme',
       refreshToken: null,
     };
+
+    mockedConfigService.get.mockReturnValueOnce('secret');
     mockedUserService.findOneByEmail.mockReturnValueOnce(Promise.resolve(user));
 
     await expect(
@@ -54,7 +59,7 @@ describe('AuthService', () => {
         userName: 'joe-doe2',
         password: 'changeme',
       }),
-    ).rejects.toThrowError();
+    ).rejects.toThrow();
   });
 
   afterEach(async () => {

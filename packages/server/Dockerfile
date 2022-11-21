@@ -5,14 +5,18 @@
 FROM node:18-alpine AS development
 
 WORKDIR /usr/src
-COPY --chown=node:node package.json yarn.lock ./
-RUN mkdir -p packages/server && chown -R node:node ./packages/server
+# COPY --chown=node:node package.json yarn.lock ./
+COPY package.json yarn.lock ./
+# RUN mkdir -p packages/server && chown -R node:node ./packages/server
+RUN mkdir -p packages/server
+COPY packages/server/package.json ./packages/server
 
 RUN yarn install
 
-COPY --chown=node:node packages/server packages/server
+# COPY --chown=node:node packages/server packages/server
+COPY . .
 
-USER node
+# USER node
 
 ###################
 # BUILD FOR PRODUCTION

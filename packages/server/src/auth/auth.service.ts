@@ -38,7 +38,7 @@ export class AuthService {
       ...createUserModel,
       password: hash,
     });
-    const tokens = await this.signTokens(newUser.email);
+    const tokens = await this.signTokens(newUser.email); // depend on ConfigService
     await this.updateRefreshToken(newUser.userId, tokens.refreshToken);
     return tokens;
   }
@@ -129,7 +129,7 @@ export class AuthService {
         },
         {
           secret: this.configService.get<string>('APP_SECRET'),
-          expiresIn: '15m',
+          expiresIn: '1m',
         },
       ),
       this.jwtService.signAsync(

@@ -55,7 +55,7 @@
       </v-col>
 
       <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">Ecosystem</h2>
+        <h2 class="headline font-weight-bold mb-3">{{ envex }}</h2>
 
         <v-row justify="center">
           <a
@@ -80,6 +80,7 @@ export default Vue.extend({
   name: "HelloWorld",
 
   data: () => ({
+    envex: process.env.VUE_APP_VAULT_API_BASE_URL,
     ecosystem: [
       {
         text: "vuetify-loader",

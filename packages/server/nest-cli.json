@@ -3,6 +3,6 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "assets": [{ "include": "../common/envs/*", "outDir": "./dist/common" }]
+    "assets": [{ "include": "../common/envs/*", "outDir": "./dist/src/common" }]
   }
 }

@@ -41,12 +41,15 @@
 
 <script lang="ts">
 import Vue from "vue";
+import TokenService from "./services/token.service";
+import AxiosService from "./services/axios.service";
 
 export default Vue.extend({
   name: "App",
 
-  data: () => ({
-    //
-  }),
+  created: () => {
+    AxiosService.init(process.env.VUE_APP_VAULT_API_BASE_URL);
+    AxiosService.setAuthHeader(TokenService.getToken());
+  },
 });
 </script>

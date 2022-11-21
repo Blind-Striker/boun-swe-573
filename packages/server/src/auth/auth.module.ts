@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './strategies/jwt.strategy';
+import { AuthJwtStrategy } from './strategies/auth-jwt.strategy';
 import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
@@ -21,7 +21,7 @@ import { RefreshJwtStrategy } from './strategies/refresh-jwt.strategy';
       },
     }),
   ],
-  providers: [AuthService, JwtStrategy, RefreshJwtStrategy],
+  providers: [AuthService, AuthJwtStrategy, RefreshJwtStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })

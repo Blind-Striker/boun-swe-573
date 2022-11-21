@@ -1,23 +1,28 @@
+import TokenService from "@/services/token.service";
 import Vue from "vue";
-import VueRouter, { RouteConfig } from "vue-router";
+import VueRouter, { Route, RouteConfig } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import VaultRoutes from "./routes";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
-    path: "/",
     name: "home",
+    path: VaultRoutes.HOME.path,
     component: HomeView,
+    meta: VaultRoutes.HOME.meta,
   },
   {
-    path: "/about",
+    name: "signin",
+    path: VaultRoutes.SIGNIN.path,
+    component: VaultRoutes.loadView("SignInView"),
+    meta: VaultRoutes.SIGNIN.meta,
+  },
+  {
     name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: VaultRoutes.SIGNIN.path,
+    component: VaultRoutes.loadView("AboutView"),
   },
 ];
 
@@ -25,6 +30,27 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to: Route, from: Route, next) => {
+  const isPublic = to.matched.some((record) => record.meta.public);
+  const onlyWhenLoggedOut = to.matched.some(
+    (record) => record.meta.onlyWhenLoggedOut
+  );
+  const loggedIn = !!TokenService.getToken();
+
+  if (!isPublic && !loggedIn) {
+    return next({
+      path: VaultRoutes.SIGNIN.path,
+      query: { redirect: to.fullPath },
+    });
+  }
+
+  if (loggedIn && onlyWhenLoggedOut) {
+    return next(VaultRoutes.HOME.path);
+  }
+
+  next();
 });
 
 export default router;

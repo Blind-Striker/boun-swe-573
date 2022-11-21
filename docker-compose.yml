@@ -5,17 +5,17 @@ services:
       context: .
       target: development
     container_name: vault-api
-    volumes:
-      - .:/usr/src
-      # - /usr/src/node_modules # This ensures that the NestJS container manages the node_modules folder
-      # - /usr/src/packages/server/node_modules # This ensures that the NestJS container manages the node_modules folder
-      # # - /usr/src/app/node_modules # This ensures that the NestJS container manages the node_modules folder
+    # volumes:
+    #   - .:/usr/src
+    #   - /usr/src/node_modules # This ensures that the NestJS container manages the node_modules folder
+    #   - /usr/src/packages/server/node_modules # This ensures that the NestJS container manages the node_modules folder
+    #   # - /usr/src/app/node_modules # This ensures that the NestJS container manages the node_modules folder
     env_file:
       - ./packages/server/common/envs/.env
     environment:
       - IGNORE_ENV_FILE=1
       - NODE_ENV=development
-      - MONGO_DB_CONN=mongodb://mongodb:27017/vault-db
+      - MONGO_DB_CONN=mongodb://admin:admin@mongodb:27017/vault-db
     command: yarn lerna run start:dev --scope '@vault/server'
     ports:
       - 3000:3000
