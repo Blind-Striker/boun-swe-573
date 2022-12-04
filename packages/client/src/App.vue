@@ -23,14 +23,9 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <v-btn @click="signin" v-if="!signedIn" color="primary"> Sign in </v-btn>
+      <v-btn @click="signup" v-if="!signedIn" color="primary"> Sign up </v-btn>
+      <v-btn @click="signout" v-if="signedIn" color="primary"> Sign out </v-btn>
     </v-app-bar>
 
     <v-main>
@@ -43,6 +38,10 @@
 import Vue from "vue";
 import TokenService from "./services/token.service";
 import AxiosService from "./services/axios.service";
+import { vxm } from "./store";
+import { mapGetters } from "vuex";
+import router from "./router";
+import VaultRoutes from "./router/routes";
 
 export default Vue.extend({
   name: "App",
@@ -50,6 +49,23 @@ export default Vue.extend({
   created: () => {
     AxiosService.init(process.env.VUE_APP_VAULT_API_BASE_URL);
     AxiosService.setAuthHeader(TokenService.getToken());
+    AxiosService.mountUnauthorizedInterceptor();
+  },
+
+  methods: {
+    signout: async () => {
+      await vxm.auth.signout();
+    },
+    signin: async () => {
+      await router.push(VaultRoutes.SIGNIN.path);
+    },
+    signup: async () => {
+      await router.push(VaultRoutes.SIGNUP.path);
+    },
+  },
+
+  computed: {
+    ...mapGetters("auth", ["signedIn"]),
   },
 });
 </script>

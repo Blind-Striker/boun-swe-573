@@ -7,7 +7,7 @@
             <v-toolbar-title>Sign in</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
-            <form ref="form" @submit.prevent="signIn()">
+            <form ref="form" @submit.prevent="signin()">
               <v-text-field
                 v-model="email"
                 name="email"
@@ -46,7 +46,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import { authService } from "../services/auth.service";
+import { vxm } from "../store";
 
 @Component
 export default class SignIn extends Vue {
@@ -54,9 +54,8 @@ export default class SignIn extends Vue {
   password = "";
   errorMessage = "";
 
-  async signIn() {
-    debugger;
-    await authService.signIn(this.email, this.password);
+  async signin() {
+    await vxm.auth.signin({ email: this.email, password: this.password });
   }
 }
 </script>

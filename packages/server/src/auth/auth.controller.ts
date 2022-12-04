@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateUserModel } from '../users/models/create-user.model';
-import { LoginUserModel } from '../users/models/login-user.model';
+import { SigninUserModel } from '../users/models/signin-user.model';
 
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -28,15 +28,15 @@ export class AuthController {
 
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  signin(@Body() loginUserModel: LoginUserModel) {
-    return this.authService.signIn(loginUserModel);
+  signin(@Body() signinUserModel: SigninUserModel) {
+    return this.authService.signIn(signinUserModel);
   }
 
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @Get('logout')
-  logout(@Req() req: Request) {
-    this.authService.logout(req.user['sub']);
+  @Get('signout')
+  signout(@Req() req: Request) {
+    this.authService.signout(req.user['sub']);
   }
 
   @UseGuards(RefreshAuthGuard)

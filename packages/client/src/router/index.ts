@@ -20,8 +20,14 @@ const routes: Array<RouteConfig> = [
     meta: VaultRoutes.SIGNIN.meta,
   },
   {
+    name: "signup",
+    path: VaultRoutes.SIGNUP.path,
+    component: VaultRoutes.loadView("SignUpView"),
+    meta: VaultRoutes.SIGNUP.meta,
+  },
+  {
     name: "about",
-    path: VaultRoutes.SIGNIN.path,
+    path: VaultRoutes.ABOUT.path,
     component: VaultRoutes.loadView("AboutView"),
   },
 ];
@@ -37,6 +43,7 @@ router.beforeEach((to: Route, from: Route, next) => {
   const onlyWhenLoggedOut = to.matched.some(
     (record) => record.meta.onlyWhenLoggedOut
   );
+
   const loggedIn = !!TokenService.getToken();
 
   if (!isPublic && !loggedIn) {

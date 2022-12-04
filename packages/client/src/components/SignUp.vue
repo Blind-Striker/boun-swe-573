@@ -86,6 +86,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+import { vxm } from "../store";
 
 @Component
 export default class SignIn extends Vue {
@@ -97,8 +98,14 @@ export default class SignIn extends Vue {
   confirmPassword = "";
   errorMessage = "";
 
-  signUp() {
-    console.log("signUp");
+  async signUp() {
+    await vxm.auth.signUp({
+      firstName: this.firstName,
+      lastName: this.lastName,
+      userName: this.userName,
+      email: this.email,
+      password: this.password,
+    });
   }
 }
 </script>

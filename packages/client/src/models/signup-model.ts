@@ -4,6 +4,6 @@ export class SignUpModel {
     public userName: string,
     public firstName: string,
     public lastName: string,
-    public passWord: string
+    public password: string
   ) {}
 }

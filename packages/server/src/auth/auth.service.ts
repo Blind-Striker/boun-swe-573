@@ -9,7 +9,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { LoginUserModel } from '../users/models/login-user.model';
+import { SigninUserModel } from '../users/models/signin-user.model';
 import { UserModel } from '../users/models/user.model';
 import { UserViewModel } from '../users/models/user.viewmodel';
 import { UserService } from '../users/users.service';
@@ -43,21 +43,21 @@ export class AuthService {
     return tokens;
   }
 
-  async signIn(loginUserModel: LoginUserModel) {
-    const user = await this.userService.findOneByEmail(loginUserModel.email);
+  async signIn(signinUserModel: SigninUserModel) {
+    const user = await this.userService.findOneByEmail(signinUserModel.email);
     if (!user) {
-      throw new BadRequestException(
+      throw new UnauthorizedException(
         'Your authentication information is incorrect. Please try again',
       );
     }
 
     const passwordMatches = await bcrypt.compare(
-      loginUserModel.password,
+      signinUserModel.password,
       user.password,
     );
 
     if (!passwordMatches) {
-      throw new BadRequestException(
+      throw new UnauthorizedException(
         'Your authentication information is incorrect. Please try again',
       );
     }
@@ -67,7 +67,7 @@ export class AuthService {
     return tokens;
   }
 
-  async logout(email: string) {
+  async signout(email: string) {
     const user = await this.userService.findOneByEmail(email);
 
     if (!user) {

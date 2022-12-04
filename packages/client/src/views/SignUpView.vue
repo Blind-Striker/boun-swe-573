@@ -1,16 +1,16 @@
 <template>
-  <sign-in />
+  <sign-up />
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import SignIn from "../components/SignIn.vue";
+import SignUp from "../components/SignUp.vue";
 
 @Component({
   components: {
-    SignIn,
+    SignUp,
   },
 })
-export default class SignInView extends Vue {}
+export default class SignUpView extends Vue {}
 </script>

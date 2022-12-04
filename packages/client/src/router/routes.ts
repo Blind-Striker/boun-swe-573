@@ -21,11 +21,19 @@ class VaultRoutes {
   };
 
   public static SIGNUP: VaultRoutes = {
-    path: "/about",
+    path: "/signup",
+    meta: {
+      public: true,
+      onlyWhenLoggedOut: false,
+    },
   };
 
   public static ABOUT: VaultRoutes = {
     path: "/about",
+    meta: {
+      public: false,
+      onlyWhenLoggedOut: false,
+    },
   };
 
   static loadView(view: string) {

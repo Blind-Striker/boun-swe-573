@@ -1,4 +1,4 @@
-export class LoginUserModel {
+export class SigninUserModel {
   readonly email: string;
   readonly password: string;
 }
