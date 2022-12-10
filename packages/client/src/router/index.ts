@@ -26,6 +26,16 @@ const routes: Array<RouteConfig> = [
     meta: VaultRoutes.SIGNUP.meta,
   },
   {
+    name: "add-content",
+    path: VaultRoutes.ADDCONTENT.path,
+    component: VaultRoutes.loadView("AddContentView"),
+  },
+  {
+    name: "list-content",
+    path: VaultRoutes.LISTCONTENT.path,
+    component: VaultRoutes.loadView("ContentListView"),
+  },
+  {
     name: "about",
     path: VaultRoutes.ABOUT.path,
     component: VaultRoutes.loadView("AboutView"),

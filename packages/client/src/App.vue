@@ -26,9 +26,11 @@
       <v-btn @click="signin" v-if="!signedIn" color="primary"> Sign in </v-btn>
       <v-btn @click="signup" v-if="!signedIn" color="primary"> Sign up </v-btn>
       <v-btn @click="signout" v-if="signedIn" color="primary"> Sign out </v-btn>
+      <v-btn @click="testmessage" color="primary"> Test Message</v-btn>
     </v-app-bar>
 
     <v-main>
+      <message-box />
       <router-view />
     </v-main>
   </v-app>
@@ -42,10 +44,14 @@ import { vxm } from "./store";
 import { mapGetters } from "vuex";
 import router from "./router";
 import VaultRoutes from "./router/routes";
+import MessageBox from "./components/MessageBox.vue";
+import { Message } from "./store/message-box.store";
 
 export default Vue.extend({
   name: "App",
-
+  components: {
+    MessageBox,
+  },
   created: () => {
     AxiosService.init(process.env.VUE_APP_VAULT_API_BASE_URL);
     AxiosService.setAuthHeader(TokenService.getToken());
@@ -61,6 +67,15 @@ export default Vue.extend({
     },
     signup: async () => {
       await router.push(VaultRoutes.SIGNUP.path);
+    },
+    testmessage() {
+      const message: Message = {
+        text: "Test message",
+        type: "success",
+        timeout: 2000,
+        dismissible: true,
+      };
+      this.$store.dispatch("message_box/addMessage", message);
     },
   },
 

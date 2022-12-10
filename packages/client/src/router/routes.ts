@@ -28,6 +28,22 @@ class VaultRoutes {
     },
   };
 
+  public static ADDCONTENT: VaultRoutes = {
+    path: "/addcontent",
+    meta: {
+      public: true,
+      onlyWhenLoggedOut: false,
+    },
+  };
+
+  public static LISTCONTENT: VaultRoutes = {
+    path: "/listcontent",
+    meta: {
+      public: true,
+      onlyWhenLoggedOut: false,
+    },
+  };
+
   public static ABOUT: VaultRoutes = {
     path: "/about",
     meta: {
