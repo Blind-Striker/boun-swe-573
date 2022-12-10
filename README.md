@@ -34,9 +34,9 @@ For the client, Vue.js, Vuex, and Vuetify used. Vue.js is a JavaScript framework
 Docker Compose is used to run and test the project locally. Docker Compose allows to define and run multiple containers, such as the web server and the database server, in a single, easy-to-use configuration file.
 
 ## Getting Started
-Clone the repository: git clone https://github.com/[username]/boun-swe-573.git
-Install dependencies: yarn install
-Run the project: docker-compose up
+- Clone the repository: git clone https://github.com/[username]/boun-swe-573.git
+- Install dependencies: yarn install
+- Run the project: docker-compose up
 
 ## Building
 To build the project, run the following command:
