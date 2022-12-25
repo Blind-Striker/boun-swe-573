@@ -1,4 +1,4 @@
-name: init vault infra
+name: init vault db
 
 on:
   workflow_dispatch:
