@@ -1,0 +1,42 @@
+name: build vault ui
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: vault-api
+      VUE_APP_VAULT_API_BASE_URL: ${{secrets.VUE_APP_VAULT_API_BASE_URL}}
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
+      AWS_REGION: ${{secrets.AWS_REGION}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: dump vars
+        run: |
+          echo "APP_NAME:  ${{ env.APP_NAME }}"
+          echo "APP_VERSION:  ${{ env.APP_VERSION }}"
+          echo "TAG: ${{ github.ref_name }}"
+          echo "SHA: ${{ github.sha }}"
+          echo "REF: ${{ github.ref }}"
+          echo "TYPE: ${{ github.ref_type }}"
+
+      - name: build ui
+        run: |
+          yarn install
+          yarn lerna run build --scope '@vault/client'
+
+      - name: pull credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: upload s3
+        run: |
+          aws s3 sync ./packages/client/dist/ s3://vaultui.denizirgin.com/
