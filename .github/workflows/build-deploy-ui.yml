@@ -1,4 +1,4 @@
-name: build vault ui
+name: build/deploy vault ui
 
 on:
   workflow_dispatch:
