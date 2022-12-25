@@ -1,0 +1,35 @@
+name: init vault infra
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: vault-api
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
+      AWS_REGION: ${{secrets.AWS_REGION}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+      MONGO_INITDB_DATABASE: ${{secrets.MONGO_INITDB_DATABASE}}
+      MONGO_INITDB_ROOT_PASSWORD: ${{secrets.MONGO_INITDB_ROOT_PASSWORD}}
+      MONGO_INITDB_ROOT_USERNAME: ${{secrets.MONGO_INITDB_ROOT_USERNAME}}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: pull credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: create vault-api infra stack
+        
+        run: |
+          cd .pipeline/deploy/vault-api
+          npm i -g aws-cdk
+          npm i
+          cdk synth VaultDbStack -c APP_NAME=$APP_NAME
+          cdk deploy VaultDbStack -c APP_NAME=$APP_NAME --require-approval never
