@@ -18,5 +18,6 @@ Tags.of(app).add('application', appName);
 
 new VaultInfraStack(app, 'VaultInfraStack', { env });
 
+new VaultServiceStack(app, 'VaultServiceStack', { env });
 
 new VaultDbStack(app, 'VaultDbStack', { env });
