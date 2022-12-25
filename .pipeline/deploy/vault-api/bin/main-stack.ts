@@ -16,6 +16,7 @@ const appName = app.node.tryGetContext("APP_NAME");
 
 Tags.of(app).add('application', appName);
 
+new VaultInfraStack(app, 'VaultInfraStack', { env });
 
 
 new VaultDbStack(app, 'VaultDbStack', { env });
