@@ -1,0 +1,52 @@
+name: build vault api
+
+on:
+  release:
+    types: [prereleased]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      APP_VERSION: ${{ github.ref_name }}
+      APP_NAME: vault-api
+      APP_REFRESH_SECRET: ${{secrets.APP_REFRESH_SECRET}}
+      APP_SECRET: ${{secrets.APP_SECRET}}
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
+      AWS_REGION: ${{secrets.AWS_REGION}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+      MONGO_DB_CONN: ${{secrets.MONGO_DB_CONN}}
+      MONGO_INITDB_DATABASE: ${{secrets.MONGO_INITDB_DATABASE}}
+      MONGO_INITDB_ROOT_PASSWORD: ${{secrets.MONGO_INITDB_ROOT_PASSWORD}}
+      MONGO_INITDB_ROOT_USERNAME: ${{secrets.MONGO_INITDB_ROOT_USERNAME}}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: dump vars
+        run: |
+          echo "APP_NAME:  ${{ env.APP_NAME }}"
+          echo "APP_VERSION:  ${{ env.APP_VERSION }}"
+          echo "TAG: ${{ github.ref_name }}"
+          echo "SHA: ${{ github.sha }}"
+          echo "REF: ${{ github.ref }}"
+          echo "TYPE: ${{ github.ref_type }}"
+
+      - name: pull credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ env.APP_NAME }}
+        run: |
+          docker build -f ./packages/server/Dockerfile -t $REGISTRY/$REPOSITORY:$APP_VERSION .
+          docker push $REGISTRY/$REPOSITORY:$APP_VERSION
