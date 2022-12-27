@@ -26,12 +26,15 @@ This project uses a monorepo approach with yarn workspaces and lerna for project
 - [Vuex](https://vuex.vuejs.org/)
 - [Vuetify](https://next.vuetifyjs.com/en/getting-started/installation/)
 - [Docker Compose](https://docs.docker.com/compose/)
+- [AWS CDK](https://aws.amazon.com/cdk/)
 
 The server uses Nest.js as the web framework and MongoDB (via mongoose) as the database. Nest.js is a Node.js framework that provides a scalable and maintainable way to develop web applications. MongoDB is a popular NoSQL database that is used for storing unstructured data.
 
 For the client, Vue.js, Vuex, and Vuetify used. Vue.js is a JavaScript framework for building user interfaces. Vuex is a state management library that is designed to work with Vue.js, and Vuetify is a Material Design-based UI framework that provides a consistent look and feel across the application.
 
 Docker Compose is used to run and test the project locally. Docker Compose allows to define and run multiple containers, such as the web server and the database server, in a single, easy-to-use configuration file.
+
+The application is deployed using Github actions and AWS CDK.
 
 ## Getting Started
 - Clone the repository: git clone https://github.com/[username]/boun-swe-573.git
